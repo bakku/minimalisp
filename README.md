@@ -1,2 +1,5 @@
-# tiny-lisp
-TinyLisp is a small lisp implementation written in Go
+# Tiny Lisp
+
+After reading [Crafting Interpreters](www.craftinginterpreters.com) Tiny Lisp is my small take
+on writing a programming language from scratch. It mimicks the approach of the *jlox* implementation
+and uses a tree-walking approach to interpret source code.
