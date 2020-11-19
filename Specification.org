@@ -130,13 +130,13 @@ expression → if | let | call | primary
 If expressions have the following form.
 
 #+BEGIN_SRC 
-if → "(" if expression expression expression ")"
+if → "(" "if" expression expression expression ")"
 #+END_SRC
 
 Let expressions are similarly straight forward.
 
 #+BEGIN_SRC 
-let → "(" let "(" ( IDENTIFIER expression )+ ")" expression ")"
+let → "(" "let" "(" ( IDENTIFIER expression )+ ")" expression ")"
 #+END_SRC
 
 Call specifies how function calls are structured.
