@@ -1,0 +1,152 @@
+#+TITLE: Tiny Lisp Specification
+
+This document serves as a small specification for Tiny Lisp. It explains all features of the language and highlights its grammer. Tiny Lisp is not really an actual Lisp since it lacks common Lisp features such as macros. It only uses Lisp syntax. Whether that justifies having /Lisp/ in its name is a different question.
+
+* Features
+
+Tiny Lisp tries to keep keywords and special syntax to a minimum. It is furthermore a dynamically typed language.
+
+** Comments
+
+Similar to many other Lisps, Tiny Lisp uses semicolons for comments.
+
+#+BEGIN_SRC clojure
+; This is a comment
+#+END_SRC
+
+** Expressions
+
+Naturally, Tiny Lisp uses prefix notation and S-expressions. In Tiny Lisp everything is an expression.
+
+#+BEGIN_SRC clojure
+(+ 1 (- 2 1) (/ 4 2))
+#+END_SRC
+
+** Defining functions
+
+#+BEGIN_SRC clojure
+(defun say-hello (name) (println name))
+#+END_SRC
+
+** Defining variables
+
+Tiny Lisp allows the definition of global and local variables.
+
+#+BEGIN_SRC clojure
+; Global variable
+(defvar num 1)
+
+; let defines local variables
+(let (result (+ num 1))
+  (println result))
+#+END_SRC
+
+** Returning from a function
+
+Tiny Lisp automatically returns the last expression of a function.
+
+#+BEGIN_SRC clojure
+(defun add-and-sub-one (n)
+  (let (result (+ n 1))
+    (- result 1))
+    
+(add-and-sub-one 5) ; returns 5
+#+END_SRC
+
+** Datatypes
+
+Tiny Lisp knows strings, numbers, booleans, functions, and lists.
+
+#+BEGIN_SRC clojure
+; numbers
+(defvar num 1)
+(defvar floating-num 1.2)
+
+; strings
+(defvar name "Charles")
+
+; booleans
+(defvar t true)
+(defvar f false)
+
+; functions
+(defvar f (lambda (x) (+ x 1)))
+
+; lists
+(defvar l '(1 2 3 4 5))
+#+END_SRC
+
+Furthermore, Tiny Lisp uses *nil*.
+
+#+BEGIN_SRC clojure
+; nothing
+(defvar unknown nil)
+#+END_SRC
+
+** Conditionals
+
+In Tiny Lisp everything except /false/ and /nil/ is truthy.
+
+#+BEGIN_SRC clojure
+; Prints 'Yes!'
+(if "the truth"
+  (println "Yes!")
+  (println "No!"))
+#+END_SRC
+
+* Grammar
+
+The root element of Tiny Lisp is a /program/ that is composed out of zero or more declarations.
+
+#+BEGIN_SRC 
+program → declaration* EOF
+#+END_SRC
+
+Each declaration is either a variable definition, a function definition, or an expression.
+
+#+BEGIN_SRC 
+declaration → varDef | funcDef | expression
+#+END_SRC
+
+Let's take the easy one first: a variable definition has the following structure.
+
+#+BEGIN_SRC 
+varDef → "(" "defvar" IDENTIFIER expression ")"
+#+END_SRC
+
+Functions look similar to variable definitions but additionally have parameters.
+
+#+BEGIN_SRC 
+funcDef    → "(" "defun" IDENTIFIER "(" parameters* ")" expression ")"
+parameters → IDENTIFIER*
+#+END_SRC
+
+Expressions can be furthermore divided.
+
+#+BEGIN_SRC 
+expression → if | let | call | primary
+#+END_SRC
+
+If expressions have the following form.
+
+#+BEGIN_SRC 
+if → "(" if expression expression expression ")"
+#+END_SRC
+
+Let expressions are similarly straight forward.
+
+#+BEGIN_SRC 
+let → "(" let "(" ( IDENTIFIER expression )+ ")" expression ")"
+#+END_SRC
+
+Call specifies how function calls are structured.
+
+#+BEGIN_SRC 
+call → "(" IDENTIFIER expression* ")"
+#+END_SRC
+
+Primary is everything else.
+
+#+BEGIN_SRC 
+primary → NUMBER | STRING | BOOLEAN | NIL | IDENTIFIER | "'" "(" primary* ")"
+#+END_SRC
