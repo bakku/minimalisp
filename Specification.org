@@ -24,8 +24,16 @@ Naturally, Tiny Lisp uses prefix notation and S-expressions. In Tiny Lisp everyt
 
 ** Defining functions
 
+Functions can be directly assigned to an identifier.
+
 #+BEGIN_SRC clojure
 (defun say-hello (name) (println name))
+#+END_SRC
+
+It is also possible to create an anonymous function.
+
+#+BEGIN_SRC clojure
+(lambda (name) (println name))
 #+END_SRC
 
 ** Defining variables
@@ -69,8 +77,9 @@ Tiny Lisp knows strings, numbers, booleans, functions, and lists.
 (defvar t true)
 (defvar f false)
 
-; functions
+; functions (both are actually the same)
 (defvar f (lambda (x) (+ x 1)))
+(defun f (x) (+ x 1))
 
 ; lists
 (defvar l '(1 2 3 4 5))
@@ -148,5 +157,7 @@ call → "(" IDENTIFIER expression* ")"
 Primary is everything else.
 
 #+BEGIN_SRC 
-primary → NUMBER | STRING | BOOLEAN | NIL | IDENTIFIER | "'" "(" primary* ")"
+primary → NUMBER | STRING | BOOLEAN | NIL | IDENTIFIER | list | lambda
+list    → "'" "(" primary* ")"
+lambda  → "(" "lambda" "(" parameters ")" expression ")"
 #+END_SRC
