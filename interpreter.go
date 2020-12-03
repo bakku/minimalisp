@@ -1,5 +1,9 @@
 package tinylisp
 
+import (
+	"fmt"
+)
+
 // Interpreter is an implementation of the AST visitor.
 type Interpreter struct {
 	globals *Environment
@@ -9,6 +13,7 @@ type Interpreter struct {
 // NewInterpreter is a factory function to create a new Interpreter.
 func NewInterpreter() *Interpreter {
 	global := NewEnvironment()
+	setupStdlib(global)
 	return &Interpreter{global, global}
 }
 
@@ -24,6 +29,14 @@ func (i *Interpreter) Interpret(expressions []Expression) (interface{}, error) {
 	}
 
 	return ret, nil
+}
+
+func (i *Interpreter) execute(expression Expression, env *Environment) (interface{}, error) {
+	prevEnv := i.current
+	i.current = env
+	ret, err := expression.Accept(i)
+	i.current = prevEnv
+	return ret, err
 }
 
 func (i *Interpreter) visitLiteralExpr(literalExpr *LiteralExpr) (interface{}, error) {
@@ -59,6 +72,45 @@ func (i *Interpreter) visitIfExpr(ifExpr *IfExpr) (interface{}, error) {
 	}
 
 	return ifExpr.ElseBranch.Accept(i)
+}
+
+func (i *Interpreter) visitDefunExpr(defunExpr *DefunExpr) (interface{}, error) {
+	fun := NewTinyLispFunction(defunExpr.Params, defunExpr.Body, i.current)
+
+	if err := i.current.Define(defunExpr.Name, fun); err != nil {
+		return nil, err
+	}
+
+	return fun, nil
+}
+
+func (i *Interpreter) visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}, error) {
+	fun, err := i.current.Get(funcCallExpr.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	callableFun, ok := fun.(Function)
+	if !ok {
+		return nil, &executionError{funcCallExpr.Name.Line, fmt.Sprintf("%s is not a function", funcCallExpr.Name.Lexeme)}
+	}
+
+	var arguments []interface{}
+
+	for _, arg := range funcCallExpr.Arguments {
+		val, err := arg.Accept(i)
+		if err != nil {
+			return nil, err
+		}
+
+		arguments = append(arguments, val)
+	}
+
+	if len(arguments) != callableFun.Arity() && callableFun.Arity() != infiniteArity {
+		return nil, &executionError{funcCallExpr.Name.Line, fmt.Sprintf("Expected %d arguments but got %d", callableFun.Arity(), len(arguments))}
+	}
+
+	return callableFun.Call(funcCallExpr.Name.Line, i, arguments)
 }
 
 func isTruthy(val interface{}) bool {

@@ -126,8 +126,7 @@ varDef → "(" "defvar" IDENTIFIER expression ")"
 Functions look similar to variable definitions but additionally have parameters.
 
 #+BEGIN_SRC 
-funcDef    → "(" "defun" IDENTIFIER "(" parameters* ")" expression ")"
-parameters → IDENTIFIER*
+funcDef    → "(" "defun" IDENTIFIER "(" IDENTIFIER* ")" expression ")"
 #+END_SRC
 
 Expressions can be furthermore divided.

@@ -34,6 +34,10 @@ func (p *Parser) declaration() (Expression, error) {
 		if p.matchN(Defvar, 1) {
 			return p.varDef()
 		}
+
+		if p.matchN(Defun, 1) {
+			return p.funDef()
+		}
 	}
 
 	return p.expression()
@@ -44,7 +48,7 @@ func (p *Parser) varDef() (Expression, error) {
 		return nil, err
 	}
 
-	if _, err := p.consume(Defvar, "Expect identifier after '('"); err != nil {
+	if _, err := p.consume(Defvar, "Expect 'defvar' after '('"); err != nil {
 		return nil, err
 	}
 
@@ -65,10 +69,59 @@ func (p *Parser) varDef() (Expression, error) {
 	return &DefvarExpr{ident, expr}, nil
 }
 
+func (p *Parser) funDef() (Expression, error) {
+	if _, err := p.consume(LeftParen, "Expect '(' before function definition"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(Defun, "Expect 'defun' after '('"); err != nil {
+		return nil, err
+	}
+
+	ident, err := p.consume(Identifier, "Expect identifier after 'defun'")
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(LeftParen, "Expect '(' before parameters"); err != nil {
+		return nil, err
+	}
+
+	var params []Token
+
+	for !p.match(RightParen) {
+		param, err := p.consume(Identifier, "Expect identifier as parameter")
+		if err != nil {
+			return nil, err
+		}
+
+		params = append(params, param)
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after parameters"); err != nil {
+		return nil, err
+	}
+
+	body, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after body"); err != nil {
+		return nil, err
+	}
+
+	return &DefunExpr{ident, params, body}, nil
+}
+
 func (p *Parser) expression() (Expression, error) {
 	if p.match(LeftParen) {
 		if p.matchN(If, 1) {
 			return p.ifExpr()
+		}
+
+		if p.matchN(Identifier, 1) {
+			return p.call()
 		}
 	}
 
@@ -104,6 +157,34 @@ func (p *Parser) ifExpr() (Expression, error) {
 	}
 
 	return &IfExpr{cond, thenBranch, elseBranch}, nil
+}
+
+func (p *Parser) call() (Expression, error) {
+	if _, err := p.consume(LeftParen, "Expect '(' before if expression"); err != nil {
+		return nil, err
+	}
+
+	ident, err := p.consume(Identifier, "Expect identifier of function call")
+	if err != nil {
+		return nil, err
+	}
+
+	var arguments []Expression
+
+	for !p.match(RightParen) {
+		arg, err := p.expression()
+		if err != nil {
+			return nil, err
+		}
+
+		arguments = append(arguments, arg)
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' at the end of the function call"); err != nil {
+		return nil, err
+	}
+
+	return &FuncCallExpr{ident, arguments}, nil
 }
 
 func (p *Parser) primary() (Expression, error) {

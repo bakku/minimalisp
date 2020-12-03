@@ -4,13 +4,22 @@ import "fmt"
 
 // Environment acts as a map to store and lookup values.
 type Environment struct {
-	values map[string]interface{}
+	values    map[string]interface{}
+	enclosing *Environment
 }
 
 // NewEnvironment is a factory function to create a new environment.
 func NewEnvironment() *Environment {
 	return &Environment{
 		values: make(map[string]interface{}),
+	}
+}
+
+// NewEnvironmentWithEnclosing create a new environment with a parent environment.
+func NewEnvironmentWithEnclosing(enclosing *Environment) *Environment {
+	return &Environment{
+		values:    make(map[string]interface{}),
+		enclosing: enclosing,
 	}
 }
 
@@ -29,6 +38,10 @@ func (e *Environment) Define(token Token, value interface{}) error {
 func (e *Environment) Get(token Token) (interface{}, error) {
 	val, ok := e.values[token.Lexeme]
 	if !ok {
+		if e.enclosing != nil {
+			return e.enclosing.Get(token)
+		}
+
 		return nil, &executionError{token.Line, fmt.Sprintf("Undefined variable '%s'.", token.Lexeme)}
 	}
 

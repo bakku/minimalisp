@@ -83,3 +83,34 @@ func TestParse_ShouldReturnCorrectExpressionsForIfs(t *testing.T) {
 		t.Fatalf("Expected if expression")
 	}
 }
+
+func TestParse_ShouldReturnCorrectExpressionsForDefuns(t *testing.T) {
+	tokens := []tinylisp.Token{
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Defun, "defun", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "say-hello", 1, nil},
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "first", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "last", 1, nil},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "first", 1, nil},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.EOF, "", 1, nil},
+	}
+
+	parser := tinylisp.NewParser(tokens)
+	expressions, err := parser.Parse()
+
+	if err != nil {
+		t.Fatalf("Expected err to be nil, got %v", err)
+	}
+
+	if len(expressions) != 1 {
+		t.Fatalf("Expected %d expressions, got %d", 1, len(expressions))
+	}
+
+	_, ok := expressions[0].(*tinylisp.DefunExpr)
+	if !ok {
+		t.Fatalf("Expected if expression")
+	}
+}

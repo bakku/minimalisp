@@ -11,6 +11,8 @@ type visitor interface {
 	visitDefvarExpr(defvarExpr *DefvarExpr) (interface{}, error)
 	visitVarExpr(varExpr *VarExpr) (interface{}, error)
 	visitIfExpr(ifExpr *IfExpr) (interface{}, error)
+	visitDefunExpr(defunExpr *DefunExpr) (interface{}, error)
+	visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}, error)
 }
 
 // LiteralExpr is a literal such as a string or a number.
@@ -54,4 +56,27 @@ type IfExpr struct {
 // Accept visits the if expression.
 func (e *IfExpr) Accept(visitor visitor) (interface{}, error) {
 	return visitor.visitIfExpr(e)
+}
+
+// DefunExpr is a definition of a function.
+type DefunExpr struct {
+	Name   Token
+	Params []Token
+	Body   Expression
+}
+
+// Accept visits the function definition.
+func (e *DefunExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitDefunExpr(e)
+}
+
+// FuncCallExpr is a function call.
+type FuncCallExpr struct {
+	Name      Token
+	Arguments []Expression
+}
+
+// Accept visits the function call.
+func (e *FuncCallExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitFuncCallExpr(e)
 }
