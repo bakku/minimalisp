@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"bakku.dev/tinylisp"
 )
@@ -29,15 +30,16 @@ func runScript(filename string) {
 	code := string(bytes)
 
 	scanner := tinylisp.NewScanner(code, os.Stdout)
-	tokens, err := scanner.Scan()
+	tokens, ok := scanner.Scan()
 
-	if err == nil {
+	if ok {
 		fmt.Println(tokens)
 	}
 }
 
 func startRepl() {
 	reader := bufio.NewReader(os.Stdin)
+	interpreter := tinylisp.NewInterpreter()
 
 	for {
 		fmt.Print("> ")
@@ -47,11 +49,29 @@ func startRepl() {
 			return
 		}
 
-		scanner := tinylisp.NewScanner(code, os.Stdout)
-		tokens, err := scanner.Scan()
+		code = strings.TrimSpace(code)
+		if code == "exit" {
+			return
+		}
 
-		if err == nil {
-			fmt.Println(tokens)
+		scanner := tinylisp.NewScanner(code, os.Stdout)
+		tokens, ok := scanner.Scan()
+		if !ok {
+			continue
+		}
+
+		parser := tinylisp.NewParser(tokens)
+		expressions, err := parser.Parse()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		ret, err := interpreter.Interpret(expressions)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(fmt.Sprintf("=> %v", ret))
 		}
 	}
 }

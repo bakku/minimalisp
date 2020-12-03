@@ -33,15 +33,15 @@ func NewScanner(src string, out io.Writer) *Scanner {
 }
 
 // Scan scans the source code and returns a list of tokens.
-func (s *Scanner) Scan() ([]Token, error) {
-	var lastError error = nil
+func (s *Scanner) Scan() ([]Token, bool) {
+	var ok bool = true
 
 	for !s.isAtEnd() {
 		err := s.nextToken()
 		if err != nil {
 			// Ignore errors returned by Fprintf.
 			_, _ = fmt.Fprintf(s.out, "%v\n", err)
-			lastError = err
+			ok = false
 		}
 
 		s.end++
@@ -50,11 +50,7 @@ func (s *Scanner) Scan() ([]Token, error) {
 
 	s.tokens = append(s.tokens, Token{EOF, "", s.line, nil})
 
-	return s.tokens, lastError
-}
-
-func (s *Scanner) isAtEnd() bool {
-	return s.end >= len(s.src)
+	return s.tokens, ok
 }
 
 func (s *Scanner) nextToken() error {
@@ -175,6 +171,10 @@ func (s *Scanner) peek() string {
 }
 
 func (s *Scanner) peekN(n int) string {
+	if s.end+n >= len(s.src) {
+		return " "
+	}
+
 	return string(s.src[s.end+n])
 }
 
@@ -198,4 +198,8 @@ func isAlpha(c string) bool {
 	}
 
 	return matched
+}
+
+func (s *Scanner) isAtEnd() bool {
+	return s.end >= len(s.src)
 }

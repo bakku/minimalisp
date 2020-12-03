@@ -11,14 +11,14 @@ import (
 func TestScanSourceCode_ShouldReturnEOFForEmptyString(t *testing.T) {
 	var buf bytes.Buffer
 	scanner := tinylisp.NewScanner("", &buf)
-	tokens, err := scanner.Scan()
+	tokens, ok := scanner.Scan()
 
 	if buf.String() != "" {
 		t.Fatalf("Expected error messages to be empty, got %s", buf.String())
 	}
 
-	if err != nil {
-		t.Fatalf("Expected err to be nil, got %v", err)
+	if !ok {
+		t.Fatalf("Expected everything to be ok")
 	}
 
 	if len(tokens) != 1 {
@@ -48,15 +48,15 @@ func TestScanSourceCode_ShouldReturnCorrectSequenceOfTokens(t *testing.T) {
 
 	var buf bytes.Buffer
 	scanner := tinylisp.NewScanner(sourceCode, &buf)
-	tokens, err := scanner.Scan()
+	tokens, ok := scanner.Scan()
 
 	if buf.String() != "" {
 		fmt.Println(tokens)
 		t.Fatalf("Expected error messages to be empty, got %s", buf.String())
 	}
 
-	if err != nil {
-		t.Fatalf("Expected err to be nil")
+	if !ok {
+		t.Fatalf("Expected everything to be ok")
 	}
 
 	if len(tokens) != 45 {

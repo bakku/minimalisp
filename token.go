@@ -9,6 +9,8 @@ const (
 	Str
 	Number
 	Lambda
+	True
+	False
 	Defvar
 	Defun
 	If
@@ -19,6 +21,8 @@ const (
 
 var keywords = map[string]int{
 	"lamdba": Lambda,
+	"true":   True,
+	"false":  False,
 	"let":    Let,
 	"defvar": Defvar,
 	"defun":  Defun,
@@ -32,5 +36,5 @@ type Token struct {
 	TokenType int
 	Lexeme    string
 	Line      int
-	value     interface{}
+	Value     interface{}
 }
