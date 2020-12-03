@@ -47,3 +47,24 @@ func (i *Interpreter) visitDefvarExpr(defvarExpr *DefvarExpr) (interface{}, erro
 func (i *Interpreter) visitVarExpr(varExpr *VarExpr) (interface{}, error) {
 	return i.current.Get(varExpr.Name)
 }
+
+func (i *Interpreter) visitIfExpr(ifExpr *IfExpr) (interface{}, error) {
+	cond, err := ifExpr.Condition.Accept(i)
+	if err != nil {
+		return nil, err
+	}
+
+	if isTruthy(cond) {
+		return ifExpr.ThenBranch.Accept(i)
+	}
+
+	return ifExpr.ElseBranch.Accept(i)
+}
+
+func isTruthy(val interface{}) bool {
+	if val == false || val == nil {
+		return false
+	}
+
+	return true
+}

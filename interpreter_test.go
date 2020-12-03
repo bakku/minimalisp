@@ -3,16 +3,16 @@ package tinylisp_test
 import (
 	"testing"
 
-	"bakku.dev/tinylisp"
+	. "bakku.dev/tinylisp"
 )
 
 func TestInterpret_ShouldCorrectlyInterpretCode1(t *testing.T) {
-	expressions := []tinylisp.Expression{
-		&tinylisp.DefvarExpr{tinylisp.Token{tinylisp.Identifier, "name", 1, nil}, &tinylisp.LiteralExpr{"Steven"}},
-		&tinylisp.VarExpr{tinylisp.Token{tinylisp.Identifier, "name", 2, nil}},
+	expressions := []Expression{
+		&DefvarExpr{Token{Identifier, "name", 1, nil}, &LiteralExpr{"Steven"}},
+		&VarExpr{Token{Identifier, "name", 2, nil}},
 	}
 
-	interpreter := tinylisp.NewInterpreter()
+	interpreter := NewInterpreter()
 	ret, err := interpreter.Interpret(expressions)
 
 	if err != nil {
@@ -21,5 +21,26 @@ func TestInterpret_ShouldCorrectlyInterpretCode1(t *testing.T) {
 
 	if ret != "Steven" {
 		t.Fatalf("Expected 'Steven' as result, got '%v'", ret)
+	}
+}
+
+func TestInterpret_ShouldCorrectlyInterpretCode2(t *testing.T) {
+	expressions := []Expression{
+		&IfExpr{
+			&LiteralExpr{nil},
+			&LiteralExpr{"yes"},
+			&LiteralExpr{"no"},
+		},
+	}
+
+	interpreter := NewInterpreter()
+	ret, err := interpreter.Interpret(expressions)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	if ret != "no" {
+		t.Fatalf("Expected 'no' as result, got '%v'", ret)
 	}
 }

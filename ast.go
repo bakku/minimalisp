@@ -10,6 +10,7 @@ type visitor interface {
 	visitLiteralExpr(literalExpr *LiteralExpr) (interface{}, error)
 	visitDefvarExpr(defvarExpr *DefvarExpr) (interface{}, error)
 	visitVarExpr(varExpr *VarExpr) (interface{}, error)
+	visitIfExpr(ifExpr *IfExpr) (interface{}, error)
 }
 
 // LiteralExpr is a literal such as a string or a number.
@@ -18,8 +19,8 @@ type LiteralExpr struct {
 }
 
 // Accept visits the literal expression.
-func (l *LiteralExpr) Accept(visitor visitor) (interface{}, error) {
-	return visitor.visitLiteralExpr(l)
+func (e *LiteralExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitLiteralExpr(e)
 }
 
 // DefvarExpr is a definition of a variable.
@@ -29,8 +30,8 @@ type DefvarExpr struct {
 }
 
 // Accept visits the defvar expression.
-func (l *DefvarExpr) Accept(visitor visitor) (interface{}, error) {
-	return visitor.visitDefvarExpr(l)
+func (e *DefvarExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitDefvarExpr(e)
 }
 
 // VarExpr is a reference to a variable.
@@ -39,6 +40,18 @@ type VarExpr struct {
 }
 
 // Accept visits the var expression.
-func (l *VarExpr) Accept(visitor visitor) (interface{}, error) {
-	return visitor.visitVarExpr(l)
+func (e *VarExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitVarExpr(e)
+}
+
+// IfExpr is an if expression :).
+type IfExpr struct {
+	Condition  Expression
+	ThenBranch Expression
+	ElseBranch Expression
+}
+
+// Accept visits the if expression.
+func (e *IfExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitIfExpr(e)
 }

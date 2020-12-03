@@ -36,7 +36,7 @@ func (p *Parser) declaration() (Expression, error) {
 		}
 	}
 
-	return p.primary()
+	return p.expression()
 }
 
 func (p *Parser) varDef() (Expression, error) {
@@ -66,7 +66,44 @@ func (p *Parser) varDef() (Expression, error) {
 }
 
 func (p *Parser) expression() (Expression, error) {
+	if p.match(LeftParen) {
+		if p.matchN(If, 1) {
+			return p.ifExpr()
+		}
+	}
+
 	return p.primary()
+}
+
+func (p *Parser) ifExpr() (Expression, error) {
+	if _, err := p.consume(LeftParen, "Expect '(' before if expression"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(If, "Expect 'if' after '('"); err != nil {
+		return nil, err
+	}
+
+	cond, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	thenBranch, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	elseBranch, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after if expression"); err != nil {
+		return nil, err
+	}
+
+	return &IfExpr{cond, thenBranch, elseBranch}, nil
 }
 
 func (p *Parser) primary() (Expression, error) {
