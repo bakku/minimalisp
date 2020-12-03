@@ -32,8 +32,23 @@ func runScript(filename string) {
 	scanner := tinylisp.NewScanner(code, os.Stdout)
 	tokens, ok := scanner.Scan()
 
-	if ok {
-		fmt.Println(tokens)
+	if !ok {
+		return
+	}
+
+	parser := tinylisp.NewParser(tokens)
+	expressions, err := parser.Parse()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	interpreter := tinylisp.NewInterpreter()
+	ret, err := interpreter.Interpret(expressions)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(fmt.Sprintf("=> %v", ret))
 	}
 }
 
