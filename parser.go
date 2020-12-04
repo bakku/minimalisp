@@ -259,6 +259,8 @@ func (p *Parser) primary() (Expression, error) {
 		return &VarExpr{p.peekN(-1)}, nil
 	} else if p.match(Quote) {
 		return p.list()
+	} else if p.match(LeftParen) && p.matchN(Lambda, 1) {
+		return p.lambda()
 	}
 
 	return nil, &executionError{p.peek().Line, fmt.Sprintf("Expression expected.")}
@@ -289,6 +291,46 @@ func (p *Parser) list() (Expression, error) {
 	}
 
 	return &ListExpr{elements}, nil
+}
+
+func (p *Parser) lambda() (Expression, error) {
+	if _, err := p.consume(LeftParen, "Expect '(' before list expression"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(Lambda, "Expect 'lambda' after '('"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(LeftParen, "Expect '(' before parameter list"); err != nil {
+		return nil, err
+	}
+
+	var params []Token
+
+	for !p.match(RightParen) {
+		param, err := p.consume(Identifier, "Expect identifier as parameter")
+		if err != nil {
+			return nil, err
+		}
+
+		params = append(params, param)
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after parameter list"); err != nil {
+		return nil, err
+	}
+
+	body, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after body"); err != nil {
+		return nil, err
+	}
+
+	return &LambdaExpr{params, body}, nil
 }
 
 func (p *Parser) peek() Token {

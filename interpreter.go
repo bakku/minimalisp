@@ -150,6 +150,10 @@ func (i *Interpreter) visitLetExpr(letExpr *LetExpr) (interface{}, error) {
 	return ret, nil
 }
 
+func (i *Interpreter) visitLambdaExpr(lambdaExpr *LambdaExpr) (interface{}, error) {
+	return NewTinyLispFunction(lambdaExpr.Params, lambdaExpr.Body, i.current), nil
+}
+
 func isTruthy(val interface{}) bool {
 	if val == false || val == nil {
 		return false

@@ -20,7 +20,7 @@ const (
 )
 
 var keywords = map[string]int{
-	"lamdba": Lambda,
+	"lambda": Lambda,
 	"true":   True,
 	"false":  False,
 	"let":    Let,

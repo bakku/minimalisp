@@ -15,6 +15,7 @@ type visitor interface {
 	visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}, error)
 	visitListExpr(listExpr *ListExpr) (interface{}, error)
 	visitLetExpr(letExpr *LetExpr) (interface{}, error)
+	visitLambdaExpr(lambdaExpr *LambdaExpr) (interface{}, error)
 }
 
 // LiteralExpr is a literal such as a string or a number.
@@ -103,4 +104,15 @@ type LetExpr struct {
 // Accept visits the let expression.
 func (e *LetExpr) Accept(visitor visitor) (interface{}, error) {
 	return visitor.visitLetExpr(e)
+}
+
+// LambdaExpr is a lambda expression to define anonymous functions.
+type LambdaExpr struct {
+	Params []Token
+	Body   Expression
+}
+
+// Accept visits the lambda expression.
+func (e *LambdaExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitLambdaExpr(e)
 }

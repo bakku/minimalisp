@@ -158,5 +158,5 @@ Primary is everything else.
 #+BEGIN_SRC 
 primary → NUMBER | STRING | BOOLEAN | NIL | IDENTIFIER | list | lambda
 list    → "'" "(" expression* ")"
-lambda  → "(" "lambda" "(" parameters ")" expression ")"
+lambda  → "(" "lambda" "(" IDENTIFIER* ")" expression ")"
 #+END_SRC
