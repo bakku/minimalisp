@@ -148,3 +148,37 @@ func TestParse_ShouldReturnCorrectExpressionsForNestedCalls(t *testing.T) {
 		t.Fatalf("Expected function call expression")
 	}
 }
+
+func TestParse_ShouldReturnCorrectExpressionsForLet(t *testing.T) {
+	tokens := []tinylisp.Token{
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Let, "let", 1, nil},
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "n", 1, nil},
+		tinylisp.Token{tinylisp.Number, "1", 1, 1},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "+", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "n", 1, nil},
+		tinylisp.Token{tinylisp.Number, "1", 1, 1},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.EOF, "", 1, nil},
+	}
+
+	parser := tinylisp.NewParser(tokens)
+	expressions, err := parser.Parse()
+
+	if err != nil {
+		t.Fatalf("Expected err to be nil, got %v", err)
+	}
+
+	if len(expressions) != 1 {
+		t.Fatalf("Expected %d expressions, got %d", 1, len(expressions))
+	}
+
+	_, ok := expressions[0].(*tinylisp.LetExpr)
+	if !ok {
+		t.Fatalf("Expected let expression")
+	}
+}

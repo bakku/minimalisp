@@ -128,6 +128,28 @@ func (i *Interpreter) visitListExpr(listExpr *ListExpr) (interface{}, error) {
 	return NewArrayList(elements), nil
 }
 
+func (i *Interpreter) visitLetExpr(letExpr *LetExpr) (interface{}, error) {
+	letEnv := NewEnvironmentWithEnclosing(i.current)
+
+	for n, name := range letExpr.Names {
+		val, err := letExpr.Values[n].Accept(i)
+		if err != nil {
+			return nil, err
+		}
+
+		if err = letEnv.Define(name, val); err != nil {
+			return nil, err
+		}
+	}
+
+	ret, err := i.execute(letExpr.Body, letEnv)
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
 func isTruthy(val interface{}) bool {
 	if val == false || val == nil {
 		return false

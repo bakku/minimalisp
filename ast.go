@@ -14,6 +14,7 @@ type visitor interface {
 	visitDefunExpr(defunExpr *DefunExpr) (interface{}, error)
 	visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}, error)
 	visitListExpr(listExpr *ListExpr) (interface{}, error)
+	visitLetExpr(letExpr *LetExpr) (interface{}, error)
 }
 
 // LiteralExpr is a literal such as a string or a number.
@@ -90,4 +91,16 @@ type ListExpr struct {
 // Accept visits the list expression.
 func (e *ListExpr) Accept(visitor visitor) (interface{}, error) {
 	return visitor.visitListExpr(e)
+}
+
+// LetExpr is a let expression to define local variables.
+type LetExpr struct {
+	Names  []Token
+	Values []Expression
+	Body   Expression
+}
+
+// Accept visits the let expression.
+func (e *LetExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitLetExpr(e)
 }

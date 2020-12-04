@@ -120,6 +120,10 @@ func (p *Parser) expression() (Expression, error) {
 			return p.ifExpr()
 		}
 
+		if p.matchN(Let, 1) {
+			return p.letExpr()
+		}
+
 		if p.matchN(Identifier, 1) {
 			return p.call()
 		}
@@ -157,6 +161,53 @@ func (p *Parser) ifExpr() (Expression, error) {
 	}
 
 	return &IfExpr{cond, thenBranch, elseBranch}, nil
+}
+
+func (p *Parser) letExpr() (Expression, error) {
+	if _, err := p.consume(LeftParen, "Expect '(' before let expression"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(Let, "Expect 'let' after '('"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(LeftParen, "Expect '(' before variable list"); err != nil {
+		return nil, err
+	}
+
+	var names []Token
+	var values []Expression
+
+	for !p.match(RightParen) {
+		name, err := p.consume(Identifier, "Expect name of variable")
+		if err != nil {
+			return nil, err
+		}
+
+		val, err := p.expression()
+		if err != nil {
+			return nil, err
+		}
+
+		names = append(names, name)
+		values = append(values, val)
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after variable list"); err != nil {
+		return nil, err
+	}
+
+	body, err := p.expression()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after let body"); err != nil {
+		return nil, err
+	}
+
+	return &LetExpr{names, values, body}, nil
 }
 
 func (p *Parser) call() (Expression, error) {
