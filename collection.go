@@ -95,3 +95,103 @@ func (f *Len) Call(line int, i *Interpreter, arguments []interface{}) (interface
 func (f *Len) String() string {
 	return "<len>"
 }
+
+// Map applies a function to each element of a list.
+type Map struct{}
+
+// Arity returns 2.
+func (f *Map) Arity() int {
+	return 2
+}
+
+// Call implements map for a list.
+func (f *Map) Call(line int, i *Interpreter, arguments []interface{}) (interface{}, error) {
+	fun, ok := arguments[0].(Function)
+	if !ok {
+		return nil, &executionError{line, "<map> expects a function as first parameter"}
+	}
+
+	if fun.Arity() != 1 {
+		return nil, &executionError{line, "<map> expects a function which accepts one argument"}
+	}
+
+	list, ok := arguments[1].(List)
+	if !ok {
+		return nil, &executionError{line, "<map> expects a list as second parameter"}
+	}
+
+	var mappedElements []interface{}
+
+	restOfList := list
+
+	for restOfList.Len() > 0 {
+		var args []interface{}
+		args = append(args, restOfList.First())
+
+		newEl, err := fun.Call(line, i, args)
+		if err != nil {
+			return nil, err
+		}
+
+		mappedElements = append(mappedElements, newEl)
+
+		restOfList = restOfList.Rest()
+	}
+
+	return NewArrayList(mappedElements), nil
+}
+
+func (f *Map) String() string {
+	return "<map>"
+}
+
+// Filter returns a new list with only the elements for which the given function returned true.
+type Filter struct{}
+
+// Arity returns 2.
+func (f *Filter) Arity() int {
+	return 2
+}
+
+// Call implements filter for a list.
+func (f *Filter) Call(line int, i *Interpreter, arguments []interface{}) (interface{}, error) {
+	fun, ok := arguments[0].(Function)
+	if !ok {
+		return nil, &executionError{line, "<filter> expects a function as first parameter"}
+	}
+
+	if fun.Arity() != 1 {
+		return nil, &executionError{line, "<filter> expects a function which accepts one argument"}
+	}
+
+	list, ok := arguments[1].(List)
+	if !ok {
+		return nil, &executionError{line, "<filter> expects a list as second parameter"}
+	}
+
+	var filteredElements []interface{}
+
+	restOfList := list
+
+	for restOfList.Len() > 0 {
+		var args []interface{}
+		args = append(args, restOfList.First())
+
+		response, err := fun.Call(line, i, args)
+		if err != nil {
+			return nil, err
+		}
+
+		if isTruthy(response) {
+			filteredElements = append(filteredElements, restOfList.First())
+		}
+
+		restOfList = restOfList.Rest()
+	}
+
+	return NewArrayList(filteredElements), nil
+}
+
+func (f *Filter) String() string {
+	return "<filter>"
+}

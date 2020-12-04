@@ -11,14 +11,15 @@ type Function interface {
 
 // TinyLispFunction is the standard function which is used in the tiny lisp interpreter.
 type TinyLispFunction struct {
+	name    string
 	params  []Token
 	body    Expression
 	closure *Environment
 }
 
 // NewTinyLispFunction is a factory function to create a new function.
-func NewTinyLispFunction(params []Token, body Expression, closure *Environment) Function {
-	return &TinyLispFunction{params, body, closure}
+func NewTinyLispFunction(name string, params []Token, body Expression, closure *Environment) Function {
+	return &TinyLispFunction{name, params, body, closure}
 }
 
 // Arity returns the amount of params which are expected for a function call.
@@ -40,5 +41,5 @@ func (f *TinyLispFunction) Call(line int, interpreter *Interpreter, args []inter
 }
 
 func (f *TinyLispFunction) String() string {
-	return "<func>"
+	return "<" + f.name + ">"
 }
