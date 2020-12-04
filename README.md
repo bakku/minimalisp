@@ -12,4 +12,20 @@ To compile Tiny Lisp just execute:
 make
 ```
 
-Golang must be installed, of course.
+Golang must be installed, of course. This will create a `tl` executable in the `cmd/tl` folder.
+
+## Usage
+
+Tiny Lisp can be used either as a REPL or for running simple scripts. Here is an example of Tiny Lisp code:
+
+```clojure
+(defvar names '(1 2 3 4))
+(defun quarter-of (n)
+  (let (half (/ n 2))
+    (/ half 2)))
+  
+(let (quarters (map quarter-of names))
+  (if (= 0.25 (first quarters))
+    (println "yes!")
+    (println "no!")))
+```
