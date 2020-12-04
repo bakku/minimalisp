@@ -1,13 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 
 	"bakku.dev/tinylisp"
+	"github.com/peterh/liner"
 )
 
 func main() {
@@ -53,12 +53,18 @@ func runScript(filename string) {
 }
 
 func startRepl() {
-	reader := bufio.NewReader(os.Stdin)
 	interpreter := tinylisp.NewInterpreter()
+	line := liner.NewLiner()
+	defer line.Close()
+
+	line.SetCtrlCAborts(true)
 
 	for {
-		fmt.Print("> ")
-		code, err := reader.ReadString('\n')
+		code, err := line.Prompt("> ")
+		if err == liner.ErrPromptAborted {
+			continue
+		}
+
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -68,6 +74,8 @@ func startRepl() {
 		if code == "exit" {
 			return
 		}
+
+		line.AppendHistory(code)
 
 		scanner := tinylisp.NewScanner(code, os.Stdout)
 		tokens, ok := scanner.Scan()
