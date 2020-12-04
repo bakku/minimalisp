@@ -26,3 +26,7 @@ func (p *Println) Call(line int, i *Interpreter, arguments []interface{}) (inter
 
 	return nil, nil
 }
+
+func (p *Println) String() string {
+	return "<println>"
+}

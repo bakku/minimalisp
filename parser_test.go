@@ -111,6 +111,40 @@ func TestParse_ShouldReturnCorrectExpressionsForDefuns(t *testing.T) {
 
 	_, ok := expressions[0].(*tinylisp.DefunExpr)
 	if !ok {
-		t.Fatalf("Expected if expression")
+		t.Fatalf("Expected defun expression")
+	}
+}
+
+func TestParse_ShouldReturnCorrectExpressionsForNestedCalls(t *testing.T) {
+	tokens := []tinylisp.Token{
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "first", 1, nil},
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Identifier, "rest", 1, nil},
+		tinylisp.Token{tinylisp.Quote, "'", 1, nil},
+		tinylisp.Token{tinylisp.LeftParen, "(", 1, nil},
+		tinylisp.Token{tinylisp.Number, "1", 1, 1},
+		tinylisp.Token{tinylisp.Number, "2", 1, 2},
+		tinylisp.Token{tinylisp.Number, "3", 1, 3},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.RightParen, ")", 1, nil},
+		tinylisp.Token{tinylisp.EOF, "", 1, nil},
+	}
+
+	parser := tinylisp.NewParser(tokens)
+	expressions, err := parser.Parse()
+
+	if err != nil {
+		t.Fatalf("Expected err to be nil, got %v", err)
+	}
+
+	if len(expressions) != 1 {
+		t.Fatalf("Expected %d expressions, got %d", 1, len(expressions))
+	}
+
+	_, ok := expressions[0].(*tinylisp.FuncCallExpr)
+	if !ok {
+		t.Fatalf("Expected function call expression")
 	}
 }

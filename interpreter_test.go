@@ -73,3 +73,36 @@ func TestInterpret_ShouldCorrectlyInterpretCode3(t *testing.T) {
 		t.Fatalf("Expected 'no' as result, got '%v'", ret)
 	}
 }
+
+func TestInterpret_ShouldCorrectlyInterpretCode4(t *testing.T) {
+	expressions := []Expression{
+		&FuncCallExpr{
+			Token{Identifier, "first", 1, nil},
+			[]Expression{
+				&FuncCallExpr{
+					Token{Identifier, "rest", 1, nil},
+					[]Expression{
+						&ListExpr{
+							[]Expression{
+								&LiteralExpr{1},
+								&LiteralExpr{2},
+								&LiteralExpr{3},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	interpreter := NewInterpreter()
+	ret, err := interpreter.Interpret(expressions)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	if ret != 2 {
+		t.Fatalf("Expected '2' as result, got '%v'", ret)
+	}
+}

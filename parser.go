@@ -206,9 +206,38 @@ func (p *Parser) primary() (Expression, error) {
 	} else if p.match(Identifier) {
 		p.curr++
 		return &VarExpr{p.peekN(-1)}, nil
+	} else if p.match(Quote) {
+		return p.list()
 	}
 
 	return nil, &executionError{p.peek().Line, fmt.Sprintf("Expression expected.")}
+}
+
+func (p *Parser) list() (Expression, error) {
+	if _, err := p.consume(Quote, "Expect ''' before list expression"); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(LeftParen, "Expect '(' before list expression"); err != nil {
+		return nil, err
+	}
+
+	var elements []Expression
+
+	for !p.match(RightParen) {
+		expr, err := p.expression()
+		if err != nil {
+			return nil, err
+		}
+
+		elements = append(elements, expr)
+	}
+
+	if _, err := p.consume(RightParen, "Expect ')' after list expression"); err != nil {
+		return nil, err
+	}
+
+	return &ListExpr{elements}, nil
 }
 
 func (p *Parser) peek() Token {

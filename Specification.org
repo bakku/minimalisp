@@ -126,7 +126,7 @@ varDef → "(" "defvar" IDENTIFIER expression ")"
 Functions look similar to variable definitions but additionally have parameters.
 
 #+BEGIN_SRC 
-funcDef    → "(" "defun" IDENTIFIER "(" IDENTIFIER* ")" expression ")"
+funcDef → "(" "defun" IDENTIFIER "(" IDENTIFIER* ")" expression ")"
 #+END_SRC
 
 Expressions can be furthermore divided.
@@ -157,6 +157,6 @@ Primary is everything else.
 
 #+BEGIN_SRC 
 primary → NUMBER | STRING | BOOLEAN | NIL | IDENTIFIER | list | lambda
-list    → "'" "(" primary* ")"
+list    → "'" "(" expression* ")"
 lambda  → "(" "lambda" "(" parameters ")" expression ")"
 #+END_SRC

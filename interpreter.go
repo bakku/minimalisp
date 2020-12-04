@@ -113,6 +113,21 @@ func (i *Interpreter) visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}
 	return callableFun.Call(funcCallExpr.Name.Line, i, arguments)
 }
 
+func (i *Interpreter) visitListExpr(listExpr *ListExpr) (interface{}, error) {
+	var elements []interface{}
+
+	for _, element := range listExpr.Elements {
+		val, err := element.Accept(i)
+		if err != nil {
+			return nil, err
+		}
+
+		elements = append(elements, val)
+	}
+
+	return NewArrayList(elements), nil
+}
+
 func isTruthy(val interface{}) bool {
 	if val == false || val == nil {
 		return false

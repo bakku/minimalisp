@@ -13,6 +13,7 @@ type visitor interface {
 	visitIfExpr(ifExpr *IfExpr) (interface{}, error)
 	visitDefunExpr(defunExpr *DefunExpr) (interface{}, error)
 	visitFuncCallExpr(funcCallExpr *FuncCallExpr) (interface{}, error)
+	visitListExpr(listExpr *ListExpr) (interface{}, error)
 }
 
 // LiteralExpr is a literal such as a string or a number.
@@ -79,4 +80,14 @@ type FuncCallExpr struct {
 // Accept visits the function call.
 func (e *FuncCallExpr) Accept(visitor visitor) (interface{}, error) {
 	return visitor.visitFuncCallExpr(e)
+}
+
+// ListExpr represents a list collection.
+type ListExpr struct {
+	Elements []Expression
+}
+
+// Accept visits the list expression.
+func (e *ListExpr) Accept(visitor visitor) (interface{}, error) {
+	return visitor.visitListExpr(e)
 }

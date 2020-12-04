@@ -27,6 +27,10 @@ func (a *Addition) Call(line int, i *Interpreter, arguments []interface{}) (inte
 	return sum, nil
 }
 
+func (a *Addition) String() string {
+	return "<+>"
+}
+
 // Subtraction implements subtraction for TinyLisp.
 type Subtraction struct{}
 
@@ -64,6 +68,10 @@ func (s *Subtraction) Call(line int, i *Interpreter, arguments []interface{}) (i
 	return result, nil
 }
 
+func (s *Subtraction) String() string {
+	return "<->"
+}
+
 // Multiplication implements multiplication for TinyLisp.
 type Multiplication struct{}
 
@@ -99,6 +107,10 @@ func (m *Multiplication) Call(line int, i *Interpreter, arguments []interface{})
 	}
 
 	return result, nil
+}
+
+func (m *Multiplication) String() string {
+	return "<*>"
 }
 
 // Division implements division for TinyLisp.
@@ -140,4 +152,8 @@ func (d *Division) Call(line int, i *Interpreter, arguments []interface{}) (inte
 	}
 
 	return result, nil
+}
+
+func (d *Division) String() string {
+	return "</>"
 }
