@@ -1,5 +1,5 @@
 build:
-	go build -o cmd/tl/tl cmd/tl/main.go
+	go build -o cmd/mlisp/mlisp cmd/mlisp/main.go
 
 test:
 	go test ./...

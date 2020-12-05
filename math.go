@@ -1,6 +1,6 @@
-package tinylisp
+package minimalisp
 
-// Addition implements addition for TinyLisp.
+// Addition implements addition for Minimalisp.
 type Addition struct{}
 
 // Arity returns infiniteArity for +.
@@ -31,7 +31,7 @@ func (a *Addition) String() string {
 	return "<+>"
 }
 
-// Subtraction implements subtraction for TinyLisp.
+// Subtraction implements subtraction for Minimalisp.
 type Subtraction struct{}
 
 // Arity returns infiniteArity for +.
@@ -72,7 +72,7 @@ func (s *Subtraction) String() string {
 	return "<->"
 }
 
-// Multiplication implements multiplication for TinyLisp.
+// Multiplication implements multiplication for Minimalisp.
 type Multiplication struct{}
 
 // Arity returns infiniteArity for *.
@@ -113,7 +113,7 @@ func (m *Multiplication) String() string {
 	return "<*>"
 }
 
-// Division implements division for TinyLisp.
+// Division implements division for Minimalisp.
 type Division struct{}
 
 // Arity returns infiniteArity for /.

@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 func setupStdlib(env *Environment) {
 	// IO

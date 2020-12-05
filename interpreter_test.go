@@ -1,9 +1,9 @@
-package tinylisp_test
+package minimalisp_test
 
 import (
 	"testing"
 
-	. "bakku.dev/tinylisp"
+	. "bakku.dev/minimalisp"
 )
 
 func TestInterpret_ShouldCorrectlyInterpretCode1(t *testing.T) {

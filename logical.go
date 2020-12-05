@@ -1,6 +1,6 @@
-package tinylisp
+package minimalisp
 
-// And implements logical and for TinyLisp.
+// And implements logical and for Minimalisp.
 type And struct{}
 
 // Arity returns infiniteArity for or.
@@ -27,7 +27,7 @@ func (f *And) String() string {
 	return "<and>"
 }
 
-// Or implements logical or for TinyLisp.
+// Or implements logical or for Minimalisp.
 type Or struct{}
 
 // Arity returns infiniteArity for or.
@@ -54,7 +54,7 @@ func (f *Or) String() string {
 	return "<or>"
 }
 
-// Lt implements less than for TinyLisp.
+// Lt implements less than for Minimalisp.
 type Lt struct{}
 
 // Arity returns infiniteArity for less than.
@@ -93,7 +93,7 @@ func (f *Lt) String() string {
 	return "<<>"
 }
 
-// Lte implements less than equal for TinyLisp.
+// Lte implements less than equal for Minimalisp.
 type Lte struct{}
 
 // Arity returns infiniteArity for less than equal.
@@ -132,7 +132,7 @@ func (f *Lte) String() string {
 	return "<<=>"
 }
 
-// Gt implements greater than for TinyLisp.
+// Gt implements greater than for Minimalisp.
 type Gt struct{}
 
 // Arity returns infiniteArity for greater than.
@@ -171,7 +171,7 @@ func (f *Gt) String() string {
 	return "<>>"
 }
 
-// Gte implements greater than equal for TinyLisp.
+// Gte implements greater than equal for Minimalisp.
 type Gte struct{}
 
 // Arity returns infiniteArity for greater than equal.
@@ -210,7 +210,7 @@ func (f *Gte) String() string {
 	return "<>=>"
 }
 
-// Eq implements equal for TinyLisp.
+// Eq implements equal for Minimalisp.
 type Eq struct{}
 
 // Arity returns infiniteArity for equal.
@@ -241,7 +241,7 @@ func (f *Eq) String() string {
 	return "<=>"
 }
 
-// NotEq implements not equal for TinyLisp.
+// NotEq implements not equal for Minimalisp.
 type NotEq struct{}
 
 // Arity returns infiniteArity for not equal.
@@ -272,7 +272,7 @@ func (f *NotEq) String() string {
 	return "<!=>"
 }
 
-// Not implements not for TinyLisp.
+// Not implements not for Minimalisp.
 type Not struct{}
 
 // Arity returns 1 for not.

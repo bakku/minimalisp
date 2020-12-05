@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"bakku.dev/tinylisp"
+	"bakku.dev/minimalisp"
 	"github.com/peterh/liner"
 )
 
 func main() {
 	if len(os.Args) > 2 {
-		fmt.Println("Usage: tl [script]")
+		fmt.Println("Usage: mlisp [script]")
 	} else if len(os.Args) == 2 {
 		runScript(os.Args[1])
 	} else {
@@ -29,21 +29,21 @@ func runScript(filename string) {
 
 	code := string(bytes)
 
-	scanner := tinylisp.NewScanner(code, os.Stdout)
+	scanner := minimalisp.NewScanner(code, os.Stdout)
 	tokens, ok := scanner.Scan()
 
 	if !ok {
 		return
 	}
 
-	parser := tinylisp.NewParser(tokens)
+	parser := minimalisp.NewParser(tokens)
 	expressions, err := parser.Parse()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	interpreter := tinylisp.NewInterpreter()
+	interpreter := minimalisp.NewInterpreter()
 	ret, err := interpreter.Interpret(expressions)
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +53,7 @@ func runScript(filename string) {
 }
 
 func startRepl() {
-	interpreter := tinylisp.NewInterpreter()
+	interpreter := minimalisp.NewInterpreter()
 	line := liner.NewLiner()
 	defer line.Close()
 
@@ -77,13 +77,13 @@ func startRepl() {
 
 		line.AppendHistory(code)
 
-		scanner := tinylisp.NewScanner(code, os.Stdout)
+		scanner := minimalisp.NewScanner(code, os.Stdout)
 		tokens, ok := scanner.Scan()
 		if !ok {
 			continue
 		}
 
-		parser := tinylisp.NewParser(tokens)
+		parser := minimalisp.NewParser(tokens)
 		expressions, err := parser.Parse()
 		if err != nil {
 			fmt.Println(err)

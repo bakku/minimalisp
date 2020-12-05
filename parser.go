@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 import "fmt"
 

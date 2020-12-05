@@ -1,4 +1,4 @@
-module bakku.dev/tinylisp
+module bakku.dev/minimalisp
 
 go 1.15
 

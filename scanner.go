@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-// Scanner is responsible for scanning TinyLisp source code and returning
+// Scanner is responsible for scanning Minimalisp source code and returning
 // it as a list of tokens.
 type Scanner struct {
 	// start marks where the current lexeme starts.

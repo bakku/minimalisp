@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 import (
 	"fmt"
@@ -75,7 +75,7 @@ func (i *Interpreter) visitIfExpr(ifExpr *IfExpr) (interface{}, error) {
 }
 
 func (i *Interpreter) visitDefunExpr(defunExpr *DefunExpr) (interface{}, error) {
-	fun := NewTinyLispFunction(defunExpr.Name.Lexeme, defunExpr.Params, defunExpr.Body, i.current)
+	fun := NewMinimalispFunction(defunExpr.Name.Lexeme, defunExpr.Params, defunExpr.Body, i.current)
 
 	if err := i.current.Define(defunExpr.Name, fun); err != nil {
 		return nil, err
@@ -151,7 +151,7 @@ func (i *Interpreter) visitLetExpr(letExpr *LetExpr) (interface{}, error) {
 }
 
 func (i *Interpreter) visitLambdaExpr(lambdaExpr *LambdaExpr) (interface{}, error) {
-	return NewTinyLispFunction("lambda", lambdaExpr.Params, lambdaExpr.Body, i.current), nil
+	return NewMinimalispFunction("lambda", lambdaExpr.Params, lambdaExpr.Body, i.current), nil
 }
 
 func isTruthy(val interface{}) bool {

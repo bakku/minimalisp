@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 // Expression is the interface all types of expressions must fulfil.
 type Expression interface {

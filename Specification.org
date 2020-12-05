@@ -1,14 +1,14 @@
-#+TITLE: Tiny Lisp Specification
+#+TITLE: Minimalisp Specification
 
-This document serves as a small specification for Tiny Lisp. It explains all features of the language and highlights its grammer. Tiny Lisp is not really an actual Lisp since it lacks common Lisp features such as macros. It only uses Lisp syntax. Whether that justifies having /Lisp/ in its name is a different question.
+This document serves as a small specification for Minimalisp. It explains all features of the language and highlights its grammer. Minimalisp is not really an actual Lisp since it lacks common Lisp features such as macros. It only uses Lisp syntax. Whether that justifies having /Lisp/ in its name is a different question.
 
 * Features
 
-Tiny Lisp tries to keep keywords and special syntax to a minimum. It is furthermore a dynamically typed language.
+Minimalisp tries to keep keywords and special syntax to a minimum. It is furthermore a dynamically typed language.
 
 ** Comments
 
-Similar to many other Lisps, Tiny Lisp uses semicolons for comments.
+Similar to many other Lisps, Minimalisp uses semicolons for comments.
 
 #+BEGIN_SRC clojure
 ; This is a comment
@@ -16,7 +16,7 @@ Similar to many other Lisps, Tiny Lisp uses semicolons for comments.
 
 ** Expressions
 
-Naturally, Tiny Lisp uses prefix notation and S-expressions. In Tiny Lisp everything is an expression.
+Naturally, Minimalisp uses prefix notation and S-expressions. In Minimalisp everything is an expression.
 
 #+BEGIN_SRC clojure
 (+ 1 (- 2 1) (/ 4 2))
@@ -38,7 +38,7 @@ It is also possible to create an anonymous function.
 
 ** Defining variables
 
-Tiny Lisp allows the definition of global and local variables.
+Minimalisp allows the definition of global and local variables.
 
 #+BEGIN_SRC clojure
 ; Global variable
@@ -51,7 +51,7 @@ Tiny Lisp allows the definition of global and local variables.
 
 ** Returning from a function
 
-Tiny Lisp automatically returns the last expression of a function.
+Minimalisp automatically returns the last expression of a function.
 
 #+BEGIN_SRC clojure
 (defun add-and-sub-one (n)
@@ -63,7 +63,7 @@ Tiny Lisp automatically returns the last expression of a function.
 
 ** Datatypes
 
-Tiny Lisp knows strings, numbers, booleans, functions, and lists.
+Minimalisp knows strings, numbers, booleans, functions, and lists.
 
 #+BEGIN_SRC clojure
 ; numbers
@@ -85,7 +85,7 @@ Tiny Lisp knows strings, numbers, booleans, functions, and lists.
 (defvar l '(1 2 3 4 5))
 #+END_SRC
 
-Furthermore, Tiny Lisp uses *nil*.
+Furthermore, Minimalisp uses *nil*.
 
 #+BEGIN_SRC clojure
 ; nothing
@@ -94,7 +94,7 @@ Furthermore, Tiny Lisp uses *nil*.
 
 ** Conditionals
 
-In Tiny Lisp everything except /false/ and /nil/ is truthy.
+In Minimalisp everything except /false/ and /nil/ is truthy.
 
 #+BEGIN_SRC clojure
 ; Prints 'Yes!'
@@ -105,7 +105,7 @@ In Tiny Lisp everything except /false/ and /nil/ is truthy.
 
 * Grammar
 
-The root element of Tiny Lisp is a /program/ that is composed out of zero or more declarations.
+The root element of Minimalisp is a /program/ that is composed out of zero or more declarations.
 
 #+BEGIN_SRC 
 program → declaration* EOF

@@ -1,4 +1,4 @@
-package tinylisp
+package minimalisp
 
 // First returns the first element of a list.
 type First struct{}

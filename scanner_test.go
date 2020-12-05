@@ -1,16 +1,16 @@
-package tinylisp_test
+package minimalisp_test
 
 import (
 	"bytes"
 	"fmt"
 	"testing"
 
-	"bakku.dev/tinylisp"
+	. "bakku.dev/minimalisp"
 )
 
 func TestScanSourceCode_ShouldReturnEOFForEmptyString(t *testing.T) {
 	var buf bytes.Buffer
-	scanner := tinylisp.NewScanner("", &buf)
+	scanner := NewScanner("", &buf)
 	tokens, ok := scanner.Scan()
 
 	if buf.String() != "" {
@@ -27,7 +27,7 @@ func TestScanSourceCode_ShouldReturnEOFForEmptyString(t *testing.T) {
 
 	token := tokens[0]
 
-	if token.TokenType != tinylisp.EOF {
+	if token.TokenType != EOF {
 		t.Fatalf("Expected EOF token, got %v", token.TokenType)
 	}
 }
@@ -47,7 +47,7 @@ func TestScanSourceCode_ShouldReturnCorrectSequenceOfTokens(t *testing.T) {
         `
 
 	var buf bytes.Buffer
-	scanner := tinylisp.NewScanner(sourceCode, &buf)
+	scanner := NewScanner(sourceCode, &buf)
 	tokens, ok := scanner.Scan()
 
 	if buf.String() != "" {
